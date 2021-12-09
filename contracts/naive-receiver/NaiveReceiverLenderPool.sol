@@ -25,7 +25,7 @@ contract NaiveReceiverLenderPool is ReentrancyGuard {
 
 
         require(borrower.isContract(), "Borrower must be a deployed contract");
-        // Transfer ETH and handle control to receiver
+        // Transfer ETH and hand control to receiver
         borrower.functionCallWithValue(
             abi.encodeWithSignature(
                 "receiveEther(uint256)",
@@ -33,7 +33,7 @@ contract NaiveReceiverLenderPool is ReentrancyGuard {
             ),
             borrowAmount
         );
-        
+
         require(
             address(this).balance >= balanceBefore + FIXED_FEE,
             "Flash loan hasn't been paid back"
