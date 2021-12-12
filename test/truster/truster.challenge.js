@@ -1,7 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
-describe.only('[Challenge] Truster', function () {
+describe('[Challenge] Truster', function () {
     let deployer, attacker;
 
     const TOKENS_IN_POOL = ethers.utils.parseEther('1000000');
