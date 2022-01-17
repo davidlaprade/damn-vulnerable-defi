@@ -10,7 +10,7 @@ contract SelfieAttacker {
     DamnValuableTokenSnapshot token;
     address governance;
     address flashPool;
-    uint256 actionId; // id of the malicious action
+    uint256 public actionId; // id of the malicious action
 
     constructor(address _token, address _flashPool, address _governance) {
         owner = msg.sender;
@@ -41,7 +41,6 @@ contract SelfieAttacker {
             address(owner)
         );
 
-        console.log("about to log the governance response");
         (bool _success, bytes memory returndata) = governance.call(
             abi.encodeWithSignature(
                 "queueAction(address,bytes,uint256)",

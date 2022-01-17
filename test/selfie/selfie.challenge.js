@@ -37,14 +37,13 @@ describe('[Challenge] Selfie', function () {
           this.pool.address,
           this.governance.address
         )
-        // TODO should pull the actionId off of the response, but I cannot figure out how
         await attackContract.attack();
-        const actionId = 1;
+        const actionId = await attackContract.actionId();
 
         // Advance time 2 days so that action can be executed
         await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); // 2 days
 
-        this.governance.executeAction(actionId);
+        await this.governance.executeAction(actionId);
     });
 
     after(async function () {
